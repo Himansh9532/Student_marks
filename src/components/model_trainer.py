@@ -58,12 +58,24 @@ class ModelTrainer:
                 "CatBoosting Regressor": CatBoostRegressor(verbose=False),  # Disable verbose output for CatBoost
                 "AdaBoost Regressor": AdaBoostRegressor()
             }
+            params = {
+                "Linear Regression": {},
+                "Lasso": {'alpha': np.logspace(-4, 4, 10), 'max_iter': [1000, 5000, 10000]},
+                "Ridge": {'alpha': np.logspace(-4, 4, 10), 'max_iter': [1000, 5000, 10000]},
+                "K-Neighbors Regressor": {'n_neighbors': [3, 5, 7, 9], 'weights': ['uniform', 'distance'], 'metric': ['euclidean', 'manhattan']},
+                "Decision Tree": {'max_depth': [None, 10, 20, 30], 'min_samples_split': [2, 5, 10], 'min_samples_leaf': [1, 2, 4], 'max_features': ['auto', 'sqrt', 'log2']},
+                "Random Forest Regressor": {'n_estimators': [100, 200, 300], 'max_depth': [None, 10, 20, 30], 'min_samples_split': [2, 5, 10], 'min_samples_leaf': [1, 2, 4], 'max_features': ['auto', 'sqrt', 'log2']},
+                "XGBRegressor": {'n_estimators': [100, 200], 'max_depth': [3, 5, 7], 'learning_rate': [0.01, 0.05, 0.1], 'subsample': [0.8, 0.9, 1.0]},
+                "CatBoosting Regressor": {'iterations': [500, 1000], 'learning_rate': [0.01, 0.05, 0.1], 'depth': [6, 10, 12]},
+                "AdaBoost Regressor": {'n_estimators': [50, 100, 200], 'learning_rate': [0.01, 0.1, 1]}
+            }
 
             # Step 3: Evaluate the models using the evaluate_model function and return the results
             model_report: dict = evaluate_models(
                 X_train=X_train, y_train=y_train,  # Training data
                 X_test= X_test, y_test=y_test,      # Test data
-                models=models                      # Dictionary of models to evaluate
+                models=models,                      # Dictionary of models to evaluate
+                param = params
             )
             
             # Get best model score from the dictionary
